@@ -1,7 +1,6 @@
 import csv
 from pprint import pprint
 
-
 def read_portfolio(filename):
     portfolio = []
     with open(filename, 'r') as f:
