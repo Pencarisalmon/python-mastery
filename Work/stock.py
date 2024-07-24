@@ -2,7 +2,7 @@ import csv
 
 
 class Stock:
-    __slots__ = ('name', '_shares', '_price')
+    __slots__ = ("name", "_shares", "_price")
     _types = (str, int, float)
 
     def __init__(self, name, shares, price):
@@ -11,10 +11,13 @@ class Stock:
         self.price = price
 
     def __repr__(self):
-        return f'Stock({self.name!r},{self.shares!r}, {self.price!r})'
+        return f"Stock({self.name!r},{self.shares!r}, {self.price!r})"
 
     def __eq__(self, other):
-        return isinstance(other, Stock) and ((self.name, self.shares, self.price) == (other.name, other.shares, other.price))
+        return isinstance(other, Stock) and (
+            (self.name, self.shares, self.price)
+            == (other.name, other.shares, other.price)
+        )
 
     @property
     def shares(self):
@@ -28,21 +31,19 @@ class Stock:
     def shares(self, value):
         if isinstance(value, self._types[1]):
             if value < 0:
-                raise ValueError(
-                    f'Expected non-negative {self._types[1].__name__}')
+                raise ValueError(f"Expected non-negative {self._types[1].__name__}")
             self._shares = value
         else:
-            raise TypeError(f'Expected {self._types[1].__name__}')
+            raise TypeError(f"Expected {self._types[1].__name__}")
 
     @price.setter
     def price(self, value):
         if isinstance(value, self._types[2]):
             if value < 0:
-                raise ValueError(
-                    f'Expected non-negative {self._types[2].__name__}')
+                raise ValueError(f"Expected non-negative {self._types[2].__name__}")
             self._price = value
         else:
-            raise TypeError(f'Expected {self._types[2].__name__}')
+            raise TypeError(f"Expected {self._types[2].__name__}")
 
     @property
     def cost(self):
@@ -59,8 +60,8 @@ class Stock:
 
 
 def print_portfolio(portfolio):
-    headers = ['name', 'shares', 'price']
-    print(f'{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s}')
-    print((('-'*10) + ' ')*3)
+    headers = ["name", "shares", "price"]
+    print(f"{headers[0]:>10s} {headers[1]:>10s} {headers[2]:>10s}")
+    print((("-" * 10) + " ") * 3)
     for data in portfolio:
-        print(f'{data.name:>10s} {data.shares:>10d} {data.price:>10.2f}')
+        print(f"{data.name:>10s} {data.shares:>10d} {data.price:>10.2f}")
