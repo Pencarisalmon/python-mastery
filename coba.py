@@ -1,4 +1,12 @@
-flo = "2.3\n"
+def counter(value):
+    def incr():
+        nonlocal value
+        value += 1
+        return value
 
-print(flo)
-print(float(flo))
+    def decr():
+        nonlocal value
+        value -= 1
+        return value
+
+    return incr, decr

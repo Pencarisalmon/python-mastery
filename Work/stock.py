@@ -11,7 +11,7 @@ class Stock:
         self.price = price
 
     def __repr__(self):
-        return f"Stock({self.name!r},{self.shares!r}, {self.price!r})"
+        return f"Stock({self.name!r}, {self.shares!r}, {self.price!r})"
 
     def __eq__(self, other):
         return isinstance(other, Stock) and (

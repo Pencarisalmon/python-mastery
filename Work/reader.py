@@ -1,44 +1,47 @@
 import csv
-from abc import ABC, abstractmethod
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
-class CSVParser(ABC):
-    def parse(self, filename):
-        records = []
-        with open(filename) as f:
-            rows = csv.reader(f)
-            headers = next(rows)
-            for row in rows:
-                record = self.make_record(headers, row)
-                records.append(record)
-        return records
-
-    @abstractmethod
-    def make_record(self, headers, row):
-        pass
+def convert_csv(lines, func, *, headers=None):
+    rows = csv.reader(lines)
+    if headers is None:
+        headers = next(rows)
+    records = []
+    for index, row in enumerate(rows, start=1):
+        try:
+            records.append(func(headers, row))
+        except ValueError as e:
+            logging.warning(f"Row {index}: Bad Row: {row}")
+            logging.debug(f"Row {index}: Reason: {e}")
 
 
-class DictCSVParser(CSVParser):
-    def __init__(self, types):
-        self.types = types
-
-    def make_record(self, headers, row):
-        return {name: func(val) for name, func, val in zip(headers, self.types, row)}
-
-
-class InstanceCSVParser(CSVParser):
-    def __init__(self, cls):
-        self.cls = cls
-
-    def make_record(self, headers, row):
-        return self.cls.from_row(row)
+def csv_as_dicts(lines, types, *, headers=None):
+    return convert_csv(
+        lines,
+        lambda headers, row: {
+            name: func(val) for name, func, val in zip(headers, types, row)
+        },
+        headers=headers,
+    )
 
 
-def read_csv_as_dicts(filename, types):
-    parser = DictCSVParser(types)
-    return parser.parse(filename)
+def csv_as_instances(lines, cls, *, headers=None):
+    return convert_csv(lines, lambda headers, row: cls.from_row(row), headers=headers)
 
 
-def read_csv_as_instances(filename, cls):
-    parser = InstanceCSVParser(cls)
-    return parser.parse(filename)
+def read_csv_as_dicts(filename, types, *, headers=None):
+    """
+    Read CSV data into a list of dictionaries with optional type conversion
+    """
+    with open(filename) as file:
+        return csv_as_dicts(file, types, headers=headers)
+
+
+def read_csv_as_instances(filename, cls, *, headers=None):
+    """
+    Read CSV data into a list of instances
+    """
+    with open(filename) as file:
+        return csv_as_instances(file, cls, headers=headers)

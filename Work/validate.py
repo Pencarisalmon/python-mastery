@@ -61,16 +61,3 @@ class PositiveFloat(Float, Postive):
 
 class NonEmptyString(String, NonEmpty):
     pass
-
-
-if __name__ == "__main__":
-
-    class Stock:
-        name = String()
-        shares = PositiveInteger()
-        price = PositiveFloat()
-
-        def __init__(self, name, shares, price):
-            self.name = name
-            self.shares = shares
-            self.price = price
